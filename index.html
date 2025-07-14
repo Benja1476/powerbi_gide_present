@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>คู่มือ Power BI Desktop (สำหรับนำเสนอ)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #004080; /* Dark Blue */
+      --secondary-color: #0078d7; /* Medium Blue */
+      --accent-color: #f7b32b; /* Gold/Yellow for highlights */
+      --text-color: #333;
+      --bg-light: #f4f7f6;
+      --bg-white: #ffffff;
+      --border-light: #e0e0e0;
+      --code-bg: #eef5fa;
+      --code-color: #c7254e;
+    }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      margin: 0;
+      background-color: var(--bg-light);
+      color: var(--text-color);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden; /* Prevent horizontal scroll */
+    }
+
+    /* Header Styling */
+    header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, #0a5c9a 100%);
+      color: #fff;
+      padding: 40px 20px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: rgba(255,255,255,0.05);
+      transform: rotate(45deg);
+      z-index: 0;
+    }
+    h1 {
+      font-size: 3.5em;
+      margin-bottom: 0.1em;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    }
+    header p {
+      font-size: 1.4em;
+      opacity: 0.95;
+      position: relative;
+      z-index: 1;
+      font-weight: 300;
+    }
+
+    /* Main Layout with Sidebar */
+    .main-wrapper {
+      display: flex;
+      flex-grow: 1;
+      width: 100%;
+      max-width: 1200px; /* Adjust max width for content */
+      margin: 25px auto;
+      padding: 0 20px;
+      gap: 25px; /* Space between sidebar and content */
+    }
+    aside#sidebar {
+      flex: 0 0 250px; /* Fixed width for sidebar */
+      background-color: var(--bg-white);
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      padding: 20px;
+      align-self: flex-start; /* Stick to top */
+      position: sticky;
+      top: 25px; /* Space from top */
+      max-height: calc(100vh - 50px); /* Limit height to viewport */
+      overflow-y: auto; /* Scroll if content exceeds height */
+    }
+    aside#sidebar strong {
+      font-size: 1.4em;
+      color: var(--primary-color);
+      display: block;
+      margin-bottom: 15px;
+      border-bottom: 2px solid var(--secondary-color);
+      padding-bottom: 10px;
+    }
+    aside#sidebar ol { /* Changed from ul to ol */
+      list-style: decimal; /* Ensure numbering */
+      list-style-position: inside; /* Pushes number inside list item, allows text to align better */
+      padding-left: 0; /* Remove default padding for ordered list */
+      margin: 0; /* Remove default margin */
+    }
+    aside#sidebar li {
+      margin-bottom: 8px;
+      list-style-type: decimal; /* Explicitly ensure numbering */
+    }
+    aside#sidebar li::marker { /* Style for list numbers */
+      color: var(--secondary-color);
+      font-weight: 700;
+    }
+    aside#sidebar a {
+      color: var(--secondary-color);
+      text-decoration: none;
+      /* Adjust padding and text-indent for left alignment with numbers */
+      text-align: left;
+      padding: 8px 0px; /* Adjust left padding */
+      display: block;
+      transition: all 0.3s ease;
+      border-radius: 5px;
+      /* Compensate for list-style-position: inside */
+      text-indent: -20px; 
+      padding-left: 20px; 
+    }
+    aside#sidebar a:hover {
+      background-color: var(--code-bg);
+      color: var(--primary-color);
+      transform: translateX(5px);
+    }
+    aside#sidebar a.active {
+      background-color: var(--secondary-color);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .content-area {
+      flex-grow: 1;
+      min-width: 0; /* Allow content to shrink */
+    }
+
+    /* Section Styling */
+    section {
+      background-color: var(--bg-white);
+      padding: 30px;
+      margin-bottom: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      border-left: 8px solid var(--secondary-color);
+      position: relative;
+    }
+    h2 {
+      color: var(--primary-color);
+      font-size: 2.2em;
+      border-bottom: 2px solid var(--secondary-color);
+      padding-bottom: 10px;
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-weight: 700;
+      position: relative;
+    }
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 50px;
+      height: 4px;
+      background-color: var(--accent-color);
+      border-radius: 2px;
+    }
+    h3 {
+      color: var(--primary-color);
+      font-size: 1.6em;
+      margin-top: 25px;
+      margin-bottom: 15px;
+      border-left: 5px solid var(--accent-color);
+      padding-left: 12px;
+      font-weight: 600;
+    }
+    ol, ul {
+      padding-left: 30px;
+      margin-bottom: 15px;
+    }
+    li {
+      margin-bottom: 10px;
+      line-height: 1.8;
+    }
+    p {
+        margin-bottom: 15px;
+    }
+
+    /* Code Block Styling */
+    code {
+      background-color: var(--code-bg);
+      color: var(--code-color);
+      padding: 15px 20px;
+      border-radius: 8px;
+      font-family: 'Consolas', monospace;
+      display: block;
+      margin: 15px 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: 0.98em;
+      border: 1px solid var(--border-light);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+      line-height: 1.5;
+    }
+
+    /* Callout Boxes (Tip, Pro, Note) */
+    .callout {
+      padding: 18px 25px;
+      margin-top: 25px;
+      border-radius: 10px;
+      font-weight: 600;
+      line-height: 1.6;
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+    }
+    .callout i {
+      font-size: 1.8em;
+      margin-top: 2px;
+    }
+    .callout p {
+      margin: 0;
+    }
+    .tip {
+      background-color: #fffde7; /* Light Yellow */
+      border-left: 6px solid #ffc107; /* Amber */
+      color: #8d6e63; /* Brownish gray */
+    }
+    .tip i { color: #ffc107; }
+
+    .pro {
+      background-color: #e8f5e9; /* Light Green */
+      border-left: 6px solid #4caf50; /* Green */
+      color: #2e7d32; /* Dark Green */
+    }
+    .pro i { color: #4caf50; }
+
+    .note {
+      background-color: #e3f2fd; /* Light Blue */
+      border-left: 6px solid #2196f3; /* Blue */
+      color: #1a4f72; /* Darker Blue */
+    }
+    .note i { color: #2196f3; }
+
+    /* Action Buttons */
+    .action-buttons {
+      text-align: center;
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+    .action-buttons button {
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 1.1em;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      margin: 0 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .action-buttons button:hover {
+      background-color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+    .action-buttons button i {
+      margin-right: 8px;
+    }
+
+    /* Footer Styling */
+    footer {
+      background-color: var(--primary-color);
+      color: #fff;
+      text-align: center;
+      padding: 25px;
+      margin-top: auto; /* Push footer to bottom */
+      box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+      font-size: 0.95em;
+    }
+    footer p {
+        margin: 0;
+        opacity: 0.9;
+    }
+
+    /* Scroll to Top Button */
+    #topBtn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--secondary-color);
+      color: white;
+      border: none;
+      padding: 14px 20px;
+      font-size: 1.2em;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      display: none;
+      z-index: 999;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    #topBtn:hover {
+      background: var(--primary-color);
+      transform: translateY(-3px);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 1024px) {
+      .main-wrapper {
+        flex-direction: column;
+        padding: 0 15px;
+        margin: 15px auto;
+        gap: 15px;
+      }
+      aside#sidebar {
+        position: static; /* Remove sticky behavior on small screens */
+        flex: none;
+        max-height: none;
+        width: auto;
+        margin-bottom: 20px;
+      }
+      aside#sidebar ol { /* Changed from ul to ol */
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 10px;
+        padding-left: 0; /* Remove default padding for grid layout */
+      }
+      aside#sidebar li {
+        margin-bottom: 0;
+      }
+      aside#sidebar li::marker { /* Hide numbers in grid view */
+        content: none;
+      }
+      aside#sidebar a {
+        text-align: center;
+        padding: 10px 5px;
+        text-indent: 0; /* Reset for mobile */
+        padding-left: 0; /* Reset for mobile */
+      }
+      h1 { font-size: 2.8em; }
+      header p { font-size: 1.1em; }
+      h2 { font-size: 1.8em; }
+      h3 { font-size: 1.4em; }
+      section { padding: 25px; }
+      .callout {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .callout i { margin-bottom: 10px; }
+      .action-buttons button {
+        width: calc(50% - 20px);
+        margin-bottom: 15px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2.2em; }
+      header p { font-size: 1em; }
+      h2 { font-size: 1.6em; }
+      h3 { font-size: 1.2em; }
+      section { padding: 20px; }
+      ol, ul { padding-left: 20px; }
+      code { font-size: 0.9em; padding: 12px 15px; }
+      aside#sidebar ol { grid-template-columns: 1fr; } /* Changed from ul to ol */
+      .action-buttons button { width: calc(100% - 20px); }
+      #topBtn {
+        bottom: 20px;
+        right: 20px;
+        padding: 10px 15px;
+        font-size: 1.1em;
+      }
+    }
+
+    @media print {
+      body {
+        background-color: #fff;
+        color: #000;
+        margin: 0;
+        padding: 0;
+        display: block;
+      }
+      header, footer, nav#toc, aside#sidebar, #topBtn, .action-buttons {
+        display: none !important;
+      }
+      .main-wrapper {
+        display: block;
+        max-width: 100%;
+        margin: 0;
+        padding: 20px;
+      }
+      .content-area {
+        padding: 0;
+      }
+      section {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+        page-break-inside: avoid; /* Avoid breaking sections across pages */
+      }
+      h1, h2, h3 {
+        color: #000;
+        border-bottom-color: #999;
+      }
+      h2::after {
+        background-color: #999;
+      }
+      code {
+        background-color: #eee;
+        border: 1px solid #ddd;
+        color: #000;
+      }
+      .callout {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        background-color: #f0f0f0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header id="top">
+    <h1><i class="fas fa-chart-bar"></i> คู่มือ Power BI Desktop</h1>
+    <p>เน้นสอนให้ทำตามได้จริง ตั้งแต่เริ่มจนสร้าง Dashboard ได้อย่างมืออาชีพ</p>
+  </header>
+
+  <div class="main-wrapper">
+    <aside id="sidebar">
+      <strong>สารบัญคู่มือ</strong>
+      <ol> <li><a href="#install">การติดตั้ง</a></li>
+        <li><a href="#import">การนำเข้าข้อมูล</a></li>
+        <li><a href="#clean">การทำความสะอาดข้อมูล</a></li>
+        <li><a href="#model">สร้างความสัมพันธ์</a></li>
+        <li><a href="#measure">สร้าง Measure & DAX</a></li>
+        <li><a href="#visual">การสร้างกราฟ</a></li>
+        <li><a href="#slicer">การใช้ Slicer</a></li>
+        <li><a href="#dax">สูตร DAX เพิ่มเติม</a></li>
+        <li><a href="#cscredit">สูตร CS Credit</a></li>
+        <li><a href="#strategy">กลยุทธ์ Dashboard</a></li>
+      </ol>
+      <div class="action-buttons" style="margin-top: 25px; padding: 0;">
+        <button onclick="window.print()"><i class="fas fa-print"></i> พิมพ์คู่มือ</button>
+      </div>
+    </aside>
+
+    <div class="content-area">
+      <section id="install">
+        <h2><i class="fas fa-download"></i> 1. การติดตั้ง Power BI Desktop</h2>
+        <ol>
+          <li>ไปที่เว็บไซต์ <strong>https://powerbi.microsoft.com/desktop</strong></li>
+          <li>คลิก "Download" และเลือกเวอร์ชัน Microsoft Store (แนะนำ) หรือ .exe</li>
+          <li>ทำการติดตั้งโปรแกรม โดยคลิก "Next" ตามขั้นตอนจนเสร็จสิ้น</li>
+          <li>เปิดโปรแกรม Power BI Desktop</li>
+        </ol>
+        <div class="callout tip">
+          <i class="fas fa-lightbulb"></i>
+          <p><strong>เคล็ดลับ:</strong> แนะนำใช้ Windows 10 หรือ 11 เพื่อให้ทำงานได้เต็มประสิทธิภาพและรองรับฟังก์ชันใหม่ๆ ได้ครบถ้วน</p>
+        </div>
+      </section>
+
+      <section id="import">
+        <h2><i class="fas fa-file-import"></i> 2. การนำเข้าข้อมูล (Import Data)</h2>
+        <ol>
+          <li>เปิด Power BI แล้วคลิก "Get data" ที่แถบเมนูบน</li>
+          <li>เลือกแหล่งข้อมูล เช่น Excel → คลิก "Connect"</li>
+          <li>เลือกไฟล์ → เลือก Sheet หรือ Table ที่ต้องการ → กด "Load"</li>
+        </ol>
+        <div class="callout tip">
+          <i class="fas fa-lightbulb"></i>
+          <p><strong>เคล็ดลับ:</strong> ควรจัดรูปแบบข้อมูลใน Excel ให้เรียบร้อยก่อนนำเข้า เช่น ตั้งชื่อคอลัมน์ชัดเจน ไม่มีเซลล์รวม (Merge Cells) และมีหัวตารางเพียงแถวเดียว</p>
+        </div>
+      </section>
+
+      <section id="clean">
+        <h2><i class="fas fa-brush"></i> 3. การทำความสะอาดข้อมูลใน Power Query</h2>
+        <ol>
+          <li>คลิก "Transform Data" → เข้าสู่หน้าต่าง <strong>Power Query Editor</strong></li>
+          <li>ทำการลบคอลัมน์ที่ไม่ใช้ โดยคลิกขวาที่หัวคอลัมน์ → Remove</li>
+          <li>เปลี่ยนประเภทข้อมูล (Data Type) เช่น Text → Date, Whole Number ฯลฯ</li>
+          <li>กรองค่าที่ไม่ต้องการ เช่น คลิก filter บนหัวคอลัมน์</li>
+          <li>เมื่อเสร็จให้คลิก "Close & Apply" ที่มุมซ้ายบน</li>
+        </ol>
+        <div class="callout pro">
+          <i class="fas fa-cogs"></i>
+          <p><strong>จุดเด่น:</strong> Power Query เป็นเครื่องมือทรงพลังที่ช่วยจัดการและเตรียมข้อมูลให้พร้อมใช้ โดยไม่ต้องเขียนสูตร Excel ที่ซับซ้อน ช่วยประหยัดเวลาได้อย่างมาก</p>
+        </div>
+      </section>
+
+      <section id="model">
+        <h2><i class="fas fa-project-diagram"></i> 4. การสร้างความสัมพันธ์ระหว่างตาราง (Modeling)</h2>
+        <ol>
+          <li>คลิกที่ไอคอน "Model" ด้านซ้ายมือ (รูปแผนผังตาราง)</li>
+          <li>ลากคอลัมน์ Key (คอลัมน์ที่มีค่าไม่ซ้ำกัน เช่น CustomerID, ProductID) จากตารางหนึ่งไปหาคอลัมน์เดียวกันในอีกตารางหนึ่ง</li>
+          <li>Power BI จะสร้างความสัมพันธ์ให้อัตโนมัติ (เช่น One-to-Many)</li>
+          <li>คลิกที่เส้นความสัมพันธ์เพื่อตรวจสอบชนิดความสัมพันธ์และทิศทางการกรอง (Filter Direction)</li>
+        </ol>
+        <div class="callout note">
+          <i class="fas fa-info-circle"></i>
+          <p><strong>ข้อควรจำ:</strong> การสร้างความสัมพันธ์ที่ถูกต้องเป็นหัวใจสำคัญของการวิเคราะห์ข้อมูลใน Power BI หากความสัมพันธ์ผิดพลาด ข้อมูลที่คำนวณออกมาจะไม่ถูกต้อง</p>
+        </div>
+      </section>
+
+      <section id="measure">
+        <h2><i class="fas fa-calculator"></i> 5. การสร้าง Measure และสูตร DAX</h2>
+        <p>Measure คือการคำนวณที่ใช้กับข้อมูลสรุป (Aggregate) เช่น ผลรวม, ค่าเฉลี่ย โดยใช้ภาษา DAX (Data Analysis Expressions)</p>
+        <h3>5.1 Quick Measure (สร้างด่วน)</h3>
+        <ol>
+          <li>คลิกขวาที่ตารางที่คุณต้องการสร้าง Measure → เลือก "New quick measure"</li>
+          <li>เลือกประเภทการคำนวณที่ต้องการ เช่น Sum, Average, <strong>% of Total</strong></li>
+          <li>เลือกคอลัมน์ที่จะใช้ในการคำนวณ → กด OK</li>
+        </ol>
+        <h3>5.2 สร้าง Measure เองด้วยสูตร DAX</h3>
+        <ol>
+          <li>ไปที่แท็บ <strong>Modeling</strong> บน Ribbon Bar → คลิก "New measure"</li>
+          <li>พิมพ์สูตร DAX ของคุณใน Formula Bar ตัวอย่างเช่น:</li>
+          <code>Total Sales = SUM(Sales[Amount])</code>
+          <li>กด Enter หรือคลิกเครื่องหมายถูก เพื่อยืนยันสูตร</li>
+        </ol>
+        <div class="callout tip">
+          <i class="fas fa-lightbulb"></i>
+          <p><strong>เคล็ดลับ:</strong> การสร้าง Measure ด้วย DAX ช่วยให้คุณมีความยืดหยุ่นในการคำนวณได้ซับซ้อนมากขึ้น ควรตั้งชื่อ Measure ให้สื่อความหมาย</p>
+        </div>
+      </section>
+
+      <section id="visual">
+        <h2><i class="fas fa-chart-pie"></i> 6. การสร้างกราฟ (Visualizations)</h2>
+        <ol>
+          <li>เลือกชนิดกราฟที่ต้องการจากส่วน <strong>Visualizations</strong> เช่น Bar Chart, Line Chart, หรือ Pie Chart</li>
+          <li>ลากคอลัมน์ที่ต้องการแสดงข้อมูลลงในช่อง "Axis" (แกน), "Values" (ค่า), "Legend" (คำอธิบาย) ตามประเภทกราฟที่เลือก</li>
+          <li><strong>ตัวอย่างสำหรับ Bar Chart:</strong>
+            <ol>
+              <li>ลาก "Category" ลงใน Axis และ "Sales Amount" ลงใน Values เพื่อแสดงยอดขายแยกตามประเภท</li>
+            </ol>
+          </li>
+          <li><strong>ตัวอย่างสำหรับ Line Chart:</strong>
+            <ol>
+              <li>ลาก "Date" ลงใน Axis และ "Revenue" ลงใน Values เพื่อแสดงแนวโน้มรายได้ตามเวลา</li>
+            </ol>
+          </li>
+          <li><strong>ปรับแต่งรูปแบบกราฟ:</strong>
+            <ol>
+              <li>คลิกที่กราฟที่สร้างขึ้น แล้วไปที่แท็บ <strong>Format your visual</strong> (รูปพู่กัน) ในแถบ Visualizations</li>
+              <li>ปรับแต่งต่าง ๆ เช่น:
+                <ol>
+                  <li>สีของกราฟ (Data Colors)</li>
+                  <li>การจัดรูปแบบแกน X และ Y (Axis Settings)</li>
+                  <li>การแสดงข้อมูลในกราฟ เช่น ค่าเฉลี่ย (Data Labels)</li>
+                  <li>การปรับรูปแบบการแสดงผล (Title, Border, and Shadows)</li>
+                </ol>
+              </li>
+            </ol>
+          </li>
+        </ol>
+        <div class="callout pro">
+          <i class="fas fa-magic"></i>
+          <p><strong>มืออาชีพ:</strong> การเลือกชนิดกราฟให้เหมาะสมกับข้อมูลและปรับแต่งให้สวยงาม จะช่วยให้ Dashboard ดูน่าสนใจและผู้ใช้งานเข้าใจข้อมูลได้ง่ายขึ้นมาก</p>
+        </div>
+      </section>
+
+      <section id="slicer">
+        <h2><i class="fas fa-filter"></i> 7. การใช้ Slicer (ตัวกรองข้อมูล)</h2>
+        <ol>
+          <li>คลิกเลือก Visual ชนิด <strong>Slicer</strong> จากเมนู Visualizations (รูปกรวย)</li>
+          <li>ลากคอลัมน์ที่ต้องการใช้ในการกรองข้อมูล เช่น "Year" หรือ "Product Category" ลงในช่อง Field ของ Slicer</li>
+          <li><strong>ปรับแต่ง Slicer:</strong>
+            <ol>
+              <li>เลือกรูปแบบการแสดงผล Slicer เป็น Dropdown, List, หรือ Tile (ใน Format your visual &gt; Slicer settings)</li>
+              <li>สามารถเลือกให้แสดงค่าเป็น Single select (เลือกได้ค่าเดียว) หรือ Multi-select (เลือกได้หลายค่า)</li>
+            </ol>
+          </li>
+          <li><strong>การตั้งค่าหลาย Slicer:</strong>
+            <ol>
+              <li>สามารถวาง Slicer หลายตัวใน Dashboard และจะทำงานร่วมกันเพื่อกรองข้อมูลแบบซ้อนกัน (เช่น กรองตามปี และหมวดหมู่สินค้าพร้อมกัน)</li>
+              <li>หากต้องการให้ Slicer ไม่ส่งผลต่อกราฟบางตัว ให้เลือก Slicer นั้น &gt; <strong>Format</strong> (บน Ribbon Bar) &gt; <strong>Edit interactions</strong> แล้วปรับการทำงาน</li>
+            </ol>
+          </li>
+        </ol>
+        <div class="callout tip">
+          <i class="fas fa-lightbulb"></i>
+          <p><strong>เคล็ดลับ:</strong> Slicer เป็นเครื่องมือสำคัญที่ช่วยให้ผู้ใช้สามารถโต้ตอบและกรองข้อมูลได้ตามต้องการ ทำให้ Dashboard มีความยืดหยุ่นและสามารถเข้าถึงข้อมูลเฉพาะเจาะจงได้ง่ายขึ้น</p>
+        </div>
+      </section>
+
+      <section id="dax">
+        <h2><i class="fas fa-code"></i> 8. สูตร DAX เพิ่มเติม (ที่ใช้บ่อย)</h2>
+        <h3>สูตรพื้นฐาน</h3>
+        <p><strong>ยอดขายเฉลี่ย:</strong></p>
+        <code>Avg Sales = AVERAGE(Sales[Amount])</code>
+        <p><strong>จำนวนลูกค้าที่ไม่ซ้ำกัน:</strong></p>
+        <code>Unique Customers = DISTINCTCOUNT(Customers[CustomerID])</code>
+        <p><strong>ยอดขายปีปัจจุบัน:</strong></p>
+        <code>Sales YTD = TOTALYTD(SUM(Sales[Amount]), 'Date'[Date])</code>
+
+        <h3>สูตรที่ซับซ้อนขึ้น</h3>
+        <p><strong>จัดอันดับผลิตภัณฑ์ตามยอดขาย:</strong></p>
+        <code>Top Products = RANKX(ALL(Product[Name]), [Total Sales], , DESC, DENSE)</code>
+        <p><strong>การเติบโตของยอดขายเมื่อเทียบกับเดือนก่อนหน้า:</strong></p>
+        <code>
+          Sales Growth MoM =
+          VAR CurrentMonthSales = [Total Sales]
+          VAR LastMonthSales = CALCULATE([Total Sales], PREVIOUSMONTH('Date'[Date]))
+          RETURN DIVIDE(CurrentMonthSales - LastMonthSales, LastMonthSales, 0)
+        </code>
+        <div class="callout note">
+          <i class="fas fa-info-circle"></i>
+          <p><strong>ข้อควรระวัง:</strong> DAX มีความอ่อนไหวต่อบริบท (Context) ของข้อมูล การทำความเข้าใจ FILTER CONTEXT และ ROW CONTEXT จะช่วยให้เขียนสูตรที่ซับซ้อนได้ถูกต้อง</p>
+        </div>
+      </section>
+
+      <section id="cscredit">
+        <h2><i class="fas fa-hand-holding-usd"></i> 9. สูตร DAX ที่จำเป็นสำหรับ CS และ Credit</h2>
+        <p>ในงานวิเคราะห์และคำนวณข้อมูลเครดิตลูกค้า เรามักใช้สูตร DAX เหล่านี้เพื่อวัดและจัดการข้อมูล CS Credit อย่างมีประสิทธิภาพ:</p>
+
+        <h3>9.1 รวมยอดเครดิต (Total Credit)</h3>
+        <code>Total Credit = SUM(Credit[Amount])</code>
+
+        <h3>9.2 เครดิตคงเหลือ (Remaining Credit)</h3>
+        <code>Remaining Credit = [Total Credit] - SUM(Payments[Amount])</code>
+
+        <h3>9.3 เครดิตค้างชำระเกิน 30 วัน (Overdue &gt; 30 Days)</h3>
+        <p>คำนวณยอดรวมของเครดิตที่ถึงกำหนดชำระแล้ว และยังไม่ถูกชำระเกิน 30 วันนับจากวันนี้:</p>
+        <code>
+          Overdue &gt; 30 Days =
+          CALCULATE(
+            SUM(Credit[Amount]),
+            FILTER(
+              Credit,
+              Credit[DueDate] &lt; TODAY() - 30 &amp;&amp;
+              Credit[Paid] = FALSE()
+            )
+          )
+        </code>
+
+        <h3>9.4 อัตราการใช้เครดิต (Credit Utilization Rate)</h3>
+        <p>คำนวณสัดส่วนของเครดิตที่ถูกใช้ไป เทียบกับเครดิตทั้งหมด:</p>
+        <code>
+          Credit Utilization =
+          DIVIDE(
+            [Total Credit] - [Remaining Credit],
+            [Total Credit],
+            0 /* ค่า 0 เมื่อหารด้วยศูนย์ */
+          )
+        </code>
+
+        <h3>9.5 อัตราการแก้ไขปัญหาครั้งแรก (First Call Resolution Rate)</h3>
+        <p>ใช้ในการวัดประสิทธิภาพของฝ่ายบริการลูกค้า:</p>
+        <code>
+          First Call Resolution Rate =
+          DIVIDE(
+            CALCULATE(COUNTROWS(Calls), FILTER(Calls, Calls[SolvedOnFirstCall] = TRUE())),
+            COUNTROWS(Calls)
+          )
+        </code>
+        <div class="callout tip">
+          <i class="fas fa-lightbulb"></i>
+          <p><strong>หมายเหตุ:</strong> ชื่อคอลัมน์และตารางในสูตร DAX เหล่านี้ ควรปรับให้ตรงกับโครงสร้างข้อมูลจริงของคุณใน Power BI</p>
+        </div>
+      </section>
+
+      <section id="strategy">
+        <h2><i class="fas fa-lightbulb"></i> 10. กลยุทธ์การทำ Dashboard สำหรับแผนก CS และ Credit</h2>
+
+        <h3>10.1 แนวคิดเชิงกลยุทธ์</h3>
+        <p>Dashboard สำหรับ CS (Customer Service) และ Credit ควรตอบโจทย์การติดตามประสิทธิภาพการให้บริการลูกค้า และการจัดการความเสี่ยงด้านเครดิต เพื่อช่วยให้ผู้บริหารและทีมงานสามารถวางแผนปรับปรุงกระบวนการ ลดความสูญเสีย และเพิ่มความพึงพอใจของลูกค้าได้อย่างมีข้อมูลรองรับ</p>
+
+        <h3>10.2 ตัวชี้วัด (KPI) ที่สำคัญสำหรับ CS</h3>
+        <ol>
+          <li>First Call Resolution Rate: อัตราการแก้ไขปัญหาได้ตั้งแต่การติดต่อครั้งแรก</li>
+          <li>Average Response Time: เวลาเฉลี่ยในการตอบกลับลูกค้า</li>
+          <li>Customer Satisfaction Score (CSAT): คะแนนความพึงพอใจของลูกค้า</li>
+          <li>Number of Tickets/Issues: จำนวนคำร้องหรือปัญหาที่เข้ามาต่อวัน/สัปดาห์/เดือน</li>
+          <li>Escalation Rate: อัตราการที่ปัญหาต้องถูกส่งต่อไปยังระดับที่สูงขึ้น</li>
+        </ol>
+
+        <h3>10.3 ตัวชี้วัด (KPI) ที่สำคัญสำหรับ Credit</h3>
+        <ol>
+          <li>Delinquency Rate: อัตราการผิดนัดชำระหนี้ (ยอดค้างชำระ / ยอดรวมเครดิต)</li>
+          <li>Overdue Balances by Aging Buckets: ยอดหนี้คงค้างแยกตามช่วงเวลา (เช่น 30, 60, 90+ วัน)</li>
+          <li>Credit Approval/Rejection Rate: อัตราการอนุมัติและปฏิเสธคำขอเครดิต</li>
+          <li>Days Sales Outstanding (DSO): ค่าเฉลี่ยระยะเวลาที่ใช้ในการเก็บเงินจากลูกหนี้</li>
+          <li>Credit Risk Exposure: ยอดเครดิตที่มีความเสี่ยงสูง</li>
+        </ol>
+
+        <h3>10.4 แนวทางออกแบบ Dashboard</h3>
+        <ol>
+          <li>Visualizations: ใช้กราฟแท่งและกราฟเส้นเพื่อแสดงแนวโน้มของ KPI สำคัญตามช่วงเวลา (เช่น รายวัน รายสัปดาห์ รายเดือน)</li>
+          <li>Detailed Tables: ใช้ตารางพร้อมการไฮไลท์ (Conditional Formatting) เพื่อแสดงรายการลูกค้า/เคสที่มีปัญหาหรือมีความเสี่ยงสูง</li>
+          <li>Interactive Slicers: สร้าง Slicer เพื่อให้ผู้ใช้สามารถกรองข้อมูลตามมิติที่ต้องการ เช่น แผนก, ระยะเวลา, สถานะ, หรือประเภทลูกค้า</li>
+          <li><strong>Alerts & Indicators:</strong> ใช้สี (เช่น แดง/เหลือง/เขียว) หรือไอคอน เพื่อเตือนเมื่อ KPI เกินหรือต่ำกว่าเกณฑ์ที่กำหนด</li>
+          <li>KPI Cards: แสดงตัวเลขสรุปที่สำคัญอย่างชัดเจนในรูปแบบการ์ดเดี่ยวๆ</li>
+          <li>Drill-through: สร้างความสามารถในการคลิกจากข้อมูลสรุปไปยังหน้ารายละเอียดเพื่อดูข้อมูลเชิงลึก</li>
+        </ol>
+
+        <h3>10.5 ข้อแนะนำเพิ่มเติม</h3>
+        <ol>
+          <li><strong>กำหนดเป้าหมาย:</strong> ตั้งเป้าหมาย KPI ที่ชัดเจนและทบทวนอย่างสม่ำเสมอ</li>
+          <li><strong>ความเรียบง่าย:</strong> ออกแบบ Dashboard ให้เข้าใจง่าย ไม่ซับซ้อนเกินไป เน้นข้อมูลที่สำคัญที่สุด</li>
+          <li><strong>ความเหมาะสม:</strong> เลือกใช้ Visual ที่เหมาะสมกับประเภทข้อมูลและวัตถุประสงค์ของผู้ใช้งาน</li>
+          <li><strong>ความถูกต้อง:</strong> อัปเดตข้อมูลอย่างสม่ำเสมอและตรวจสอบความถูกต้องเพื่อความแม่นยำในการตัดสินใจ</li>
+          <li><strong>การสื่อสาร:</strong> Dashboard ที่ดีคือเครื่องมือสื่อสารที่มีประสิทธิภาพ ช่วยให้ทีมงานเข้าใจสถานการณ์และร่วมกันหาทางแก้ไขได้ดียิ่งขึ้น</li>
+        </ol>
+
+        <div class="callout pro">
+          <i class="fas fa-handshake"></i>
+          <p>การนำเสนอผลลัพธ์ผ่าน Dashboard ที่ดี ไม่เพียงแต่ช่วยเพิ่มประสิทธิภาพในการทำงานของทีม แต่ยังช่วยลดความเสี่ยงทางธุรกิจ และขับเคลื่อนการตัดสินใจเชิงกลยุทธ์ที่สำคัญได้อย่างมีประสิทธิภาพ</p>
+        </div>
+      </section>
+
+      <div class="action-buttons">
+        <button onclick="sharePage()"><i class="fas fa-share-alt"></i> แชร์หน้านี้</button>
+        <button onclick="window.print()"><i class="fas fa-print"></i> พิมพ์คู่มือ</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>สร้างสรรค์โดย Benja <i class="far fa-copyright"></i> 2025 | คู่มือ Power BI Desktop ฉบับสมบูรณ์</p>
+  </footer>
+
+  <button id="topBtn" onclick="scrollToTop()">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <script>
+    // Smooth scroll for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            document.querySelector(targetId).scrollIntoView({
+                behavior: 'smooth'
+            });
+
+            // Update active state in sidebar
+            document.querySelectorAll('#sidebar a').forEach(link => {
+              link.classList.remove('active');
+            });
+            this.classList.add('active');
+        });
+    });
+
+    // Highlight active link in sidebar based on scroll position
+    const sections = document.querySelectorAll('section[id]');
+    const sidebarLinks = document.querySelectorAll('#sidebar a');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        // Adjust scroll offset to better trigger active state
+        if (pageYOffset >= sectionTop - 150 && pageYOffset < sectionTop + sectionHeight - 150) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      sidebarLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href').includes(current)) {
+          link.classList.add('active');
+        }
+      });
+    });
+
+    // Show/hide scroll to top button
+    const topBtn = document.getElementById("topBtn");
+    window.onscroll = function() {
+      topBtn.style.display = window.scrollY > 300 ? "block" : "none";
+    };
+
+    // Scroll to top function
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Share functionality
+    function sharePage() {
+      if (navigator.share) {
+        navigator.share({
+          title: document.title,
+          url: window.location.href
+        }).then(() => {
+          console.log('Thanks for sharing!');
+        }).catch(console.error);
+      } else {
+        alert('Your browser does not support the Web Share API. You can copy the URL manually: ' + window.location.href);
+        // Fallback for browsers that don't support Web Share API
+        // You could offer to copy to clipboard here
+        navigator.clipboard.writeText(window.location.href)
+          .then(() => alert('คัดลอกลิงก์เรียบร้อยแล้ว: ' + window.location.href))
+          .catch(err => console.error('Could not copy text: ', err));
+      }
+    }
+  </script>
+</body>
+</html>
