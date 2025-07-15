@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
+    /* --- CSS Styles (Internal CSS) --- */
     :root {
       --primary-color: #004080; /* Dark Blue */
       --secondary-color: #0078d7; /* Medium Blue */
@@ -122,8 +123,8 @@
       transition: all 0.3s ease;
       border-radius: 5px;
       /* Compensate for list-style-position: inside */
-      text-indent: -20px; 
-      padding-left: 20px; 
+      text-indent: -20px;
+      padding-left: 20px;
     }
     aside#sidebar a:hover {
       background-color: var(--code-bg);
@@ -208,6 +209,63 @@
       box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
       line-height: 1.5;
     }
+
+    /* Image Styling (for single images) */
+    .content-image {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 20px auto; /* Center image */
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .image-caption {
+        text-align: center;
+        font-style: italic;
+        color: var(--text-color);
+        margin-top: 10px;
+        font-size: 0.9em;
+    }
+
+    /* --- Gallery Grid Styling (สำหรับ 6 รูปภาพ) --- */
+    .image-grid {
+      display: grid;
+      /* สำหรับหน้าจอใหญ่: 3 คอลัมน์ ขนาดเท่ากัน */
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px; /* ระยะห่างระหว่างรูปภาพ */
+      margin-top: 30px;
+    }
+
+    .grid-item {
+      background-color: var(--bg-white);
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      overflow: hidden; /* เพื่อให้รูปภาพไม่ล้นขอบ */
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .grid-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .grid-image {
+      width: 100%;
+      height: 200px; /* กำหนดความสูงคงที่สำหรับรูปภาพ */
+      object-fit: cover; /* ทำให้รูปภาพครอบคลุมพื้นที่โดยไม่บิดเบี้ยว */
+      display: block;
+    }
+
+    .grid-caption {
+      text-align: center;
+      padding: 15px;
+      font-size: 0.95em;
+      color: var(--text-color);
+      font-weight: 600;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
 
     /* Callout Boxes (Tip, Pro, Note) */
     .callout {
@@ -359,6 +417,16 @@
         width: calc(50% - 20px);
         margin-bottom: 15px;
       }
+
+      /* Responsive adjustments for the image grid */
+      .image-grid {
+        /* สำหรับหน้าจอขนาดกลาง: 2 คอลัมน์ */
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+      }
+      .grid-image {
+        height: 180px; /* ปรับความสูงสำหรับหน้าจอขนาดกลาง */
+      }
     }
 
     @media (max-width: 768px) {
@@ -376,6 +444,16 @@
         right: 20px;
         padding: 10px 15px;
         font-size: 1.1em;
+      }
+
+      /* Responsive adjustments for the image grid */
+      .image-grid {
+        /* สำหรับหน้าจอเล็ก/มือถือ: 1 คอลัมน์ */
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .grid-image {
+        height: 160px; /* ปรับความสูงสำหรับหน้าจอเล็ก */
       }
     }
 
@@ -434,7 +512,8 @@
   <div class="main-wrapper">
     <aside id="sidebar">
       <strong>สารบัญคู่มือ</strong>
-      <ol> <li><a href="#install">การติดตั้ง</a></li>
+      <ol>
+        <li><a href="#install">การติดตั้ง</a></li>
         <li><a href="#import">การนำเข้าข้อมูล</a></li>
         <li><a href="#clean">การทำความสะอาดข้อมูล</a></li>
         <li><a href="#model">สร้างความสัมพันธ์</a></li>
@@ -444,6 +523,7 @@
         <li><a href="#dax">สูตร DAX เพิ่มเติม</a></li>
         <li><a href="#cscredit">สูตร CS Credit</a></li>
         <li><a href="#strategy">กลยุทธ์ Dashboard</a></li>
+        <li><a href="#gallery">แกลเลอรีรูปภาพ</a></li>
       </ol>
       <div class="action-buttons" style="margin-top: 25px; padding: 0;">
         <button onclick="window.print()"><i class="fas fa-print"></i> พิมพ์คู่มือ</button>
@@ -463,6 +543,8 @@
           <i class="fas fa-lightbulb"></i>
           <p><strong>เคล็ดลับ:</strong> แนะนำใช้ Windows 10 หรือ 11 เพื่อให้ทำงานได้เต็มประสิทธิภาพและรองรับฟังก์ชันใหม่ๆ ได้ครบถ้วน</p>
         </div>
+        <img src="images/install_screen.png" alt="หน้าจอการติดตั้ง Power BI Desktop" class="content-image">
+        <p class="image-caption">รูปภาพ: ขั้นตอนการติดตั้ง Power BI Desktop</p>
       </section>
 
       <section id="import">
@@ -476,6 +558,8 @@
           <i class="fas fa-lightbulb"></i>
           <p><strong>เคล็ดลับ:</strong> ควรจัดรูปแบบข้อมูลใน Excel ให้เรียบร้อยก่อนนำเข้า เช่น ตั้งชื่อคอลัมน์ชัดเจน ไม่มีเซลล์รวม (Merge Cells) และมีหัวตารางเพียงแถวเดียว</p>
         </div>
+        <img src="images/import_data.jpg" alt="หน้าจอการนำเข้าข้อมูลใน Power BI" class="content-image">
+        <p class="image-caption">รูปภาพ: ตัวอย่างหน้าจอการเลือกแหล่งข้อมูล Excel ใน Power BI</p>
       </section>
 
       <section id="clean">
@@ -491,6 +575,8 @@
           <i class="fas fa-cogs"></i>
           <p><strong>จุดเด่น:</strong> Power Query เป็นเครื่องมือทรงพลังที่ช่วยจัดการและเตรียมข้อมูลให้พร้อมใช้ โดยไม่ต้องเขียนสูตร Excel ที่ซับซ้อน ช่วยประหยัดเวลาได้อย่างมาก</p>
         </div>
+        <img src="images/power_query_editor.png" alt="หน้าต่าง Power Query Editor" class="content-image">
+        <p class="image-caption">รูปภาพ: Power Query Editor สำหรับทำความสะอาดข้อมูล</p>
       </section>
 
       <section id="model">
@@ -505,6 +591,8 @@
           <i class="fas fa-info-circle"></i>
           <p><strong>ข้อควรจำ:</strong> การสร้างความสัมพันธ์ที่ถูกต้องเป็นหัวใจสำคัญของการวิเคราะห์ข้อมูลใน Power BI หากความสัมพันธ์ผิดพลาด ข้อมูลที่คำนวณออกมาจะไม่ถูกต้อง</p>
         </div>
+        <img src="images/model_view.png" alt="หน้าจอ Model View ใน Power BI" class="content-image">
+        <p class="image-caption">รูปภาพ: การสร้างความสัมพันธ์ระหว่างตารางใน Model View</p>
       </section>
 
       <section id="measure">
@@ -562,6 +650,8 @@
           <i class="fas fa-magic"></i>
           <p><strong>มืออาชีพ:</strong> การเลือกชนิดกราฟให้เหมาะสมกับข้อมูลและปรับแต่งให้สวยงาม จะช่วยให้ Dashboard ดูน่าสนใจและผู้ใช้งานเข้าใจข้อมูลได้ง่ายขึ้นมาก</p>
         </div>
+        <img src="images/create_visual.png" alt="หน้าจอการสร้างกราฟใน Power BI" class="content-image">
+        <p class="image-caption">รูปภาพ: การสร้างและการปรับแต่งกราฟแท่ง</p>
       </section>
 
       <section id="slicer">
@@ -586,6 +676,8 @@
           <i class="fas fa-lightbulb"></i>
           <p><strong>เคล็ดลับ:</strong> Slicer เป็นเครื่องมือสำคัญที่ช่วยให้ผู้ใช้สามารถโต้ตอบและกรองข้อมูลได้ตามต้องการ ทำให้ Dashboard มีความยืดหยุ่นและสามารถเข้าถึงข้อมูลเฉพาะเจาะจงได้ง่ายขึ้น</p>
         </div>
+        <img src="images/slicer_example.png" alt="ตัวอย่าง Slicer ใน Power BI" class="content-image">
+        <p class="image-caption">รูปภาพ: การใช้งาน Slicer เพื่อกรองข้อมูล</p>
       </section>
 
       <section id="dax">
@@ -693,23 +785,57 @@
           <li>Visualizations: ใช้กราฟแท่งและกราฟเส้นเพื่อแสดงแนวโน้มของ KPI สำคัญตามช่วงเวลา (เช่น รายวัน รายสัปดาห์ รายเดือน)</li>
           <li>Detailed Tables: ใช้ตารางพร้อมการไฮไลท์ (Conditional Formatting) เพื่อแสดงรายการลูกค้า/เคสที่มีปัญหาหรือมีความเสี่ยงสูง</li>
           <li>Interactive Slicers: สร้าง Slicer เพื่อให้ผู้ใช้สามารถกรองข้อมูลตามมิติที่ต้องการ เช่น แผนก, ระยะเวลา, สถานะ, หรือประเภทลูกค้า</li>
-          <li><strong>Alerts & Indicators:</strong> ใช้สี (เช่น แดง/เหลือง/เขียว) หรือไอคอน เพื่อเตือนเมื่อ KPI เกินหรือต่ำกว่าเกณฑ์ที่กำหนด</li>
+          <li>**Alerts & Indicators:** ใช้สี (เช่น แดง/เหลือง/เขียว) หรือไอคอน เพื่อเตือนเมื่อ KPI เกินหรือต่ำกว่าเกณฑ์ที่กำหนด</li>
           <li>KPI Cards: แสดงตัวเลขสรุปที่สำคัญอย่างชัดเจนในรูปแบบการ์ดเดี่ยวๆ</li>
           <li>Drill-through: สร้างความสามารถในการคลิกจากข้อมูลสรุปไปยังหน้ารายละเอียดเพื่อดูข้อมูลเชิงลึก</li>
         </ol>
 
         <h3>10.5 ข้อแนะนำเพิ่มเติม</h3>
         <ol>
-          <li><strong>กำหนดเป้าหมาย:</strong> ตั้งเป้าหมาย KPI ที่ชัดเจนและทบทวนอย่างสม่ำเสมอ</li>
-          <li><strong>ความเรียบง่าย:</strong> ออกแบบ Dashboard ให้เข้าใจง่าย ไม่ซับซ้อนเกินไป เน้นข้อมูลที่สำคัญที่สุด</li>
-          <li><strong>ความเหมาะสม:</strong> เลือกใช้ Visual ที่เหมาะสมกับประเภทข้อมูลและวัตถุประสงค์ของผู้ใช้งาน</li>
-          <li><strong>ความถูกต้อง:</strong> อัปเดตข้อมูลอย่างสม่ำเสมอและตรวจสอบความถูกต้องเพื่อความแม่นยำในการตัดสินใจ</li>
-          <li><strong>การสื่อสาร:</strong> Dashboard ที่ดีคือเครื่องมือสื่อสารที่มีประสิทธิภาพ ช่วยให้ทีมงานเข้าใจสถานการณ์และร่วมกันหาทางแก้ไขได้ดียิ่งขึ้น</li>
+          <li>**กำหนดเป้าหมาย:** ตั้งเป้าหมาย KPI ที่ชัดเจนและทบทวนอย่างสม่ำเสมอ</li>
+          <li>**ความเรียบง่าย:** ออกแบบ Dashboard ให้เข้าใจง่าย ไม่ซับซ้อนเกินไป เน้นข้อมูลที่สำคัญที่สุด</li>
+          <li>**ความเหมาะสม:** เลือกใช้ Visual ที่เหมาะสมกับประเภทข้อมูลและวัตถุประสงค์ของผู้ใช้งาน</li>
+          <li>**ความถูกต้อง:** อัปเดตข้อมูลอย่างสม่ำเสมอและตรวจสอบความถูกต้องเพื่อความแม่นยำในการตัดสินใจ</li>
+          <li>**การสื่อสาร:** Dashboard ที่ดีคือเครื่องมือสื่อสารที่มีประสิทธิภาพ ช่วยให้ทีมงานเข้าใจสถานการณ์และร่วมกันหาทางแก้ไขได้ดียิ่งขึ้น</li>
         </ol>
 
         <div class="callout pro">
           <i class="fas fa-handshake"></i>
           <p>การนำเสนอผลลัพธ์ผ่าน Dashboard ที่ดี ไม่เพียงแต่ช่วยเพิ่มประสิทธิภาพในการทำงานของทีม แต่ยังช่วยลดความเสี่ยงทางธุรกิจ และขับเคลื่อนการตัดสินใจเชิงกลยุทธ์ที่สำคัญได้อย่างมีประสิทธิภาพ</p>
+        </div>
+      </section>
+
+      ---
+
+      <section id="gallery">
+        <h2><i class="fas fa-images"></i> 11. แกลเลอรีรูปภาพ</h2>
+        <p>ตัวอย่างรูปภาพประกอบการใช้งาน Power BI Desktop.</p>
+
+        <div class="image-grid">
+          <div class="grid-item">
+            <img src="images/install_screen.png" alt="หน้าจอการติดตั้ง Power BI Desktop" class="grid-image">
+            <p class="grid-caption">หน้าจอการติดตั้ง Power BI Desktop</p>
+          </div>
+          <div class="grid-item">
+            <img src="images/import_data.jpg" alt="หน้าจอการนำเข้าข้อมูลใน Power BI" class="grid-image">
+            <p class="grid-caption">หน้าจอการนำเข้าข้อมูล</p>
+          </div>
+          <div class="grid-item">
+            <img src="images/power_query_editor.png" alt="หน้าต่าง Power Query Editor" class="grid-image">
+            <p class="grid-caption">Power Query Editor</p>
+          </div>
+          <div class="grid-item">
+            <img src="images/model_view.png" alt="หน้าจอ Model View ใน Power BI" class="grid-image">
+            <p class="grid-caption">การสร้างความสัมพันธ์ (Model)</p>
+          </div>
+          <div class="grid-item">
+            <img src="images/create_visual.png" alt="หน้าจอการสร้างกราฟใน Power BI" class="grid-image">
+            <p class="grid-caption">การสร้างกราฟ (Visuals)</p>
+          </div>
+          <div class="grid-item">
+            <img src="images/slicer_example.png" alt="ตัวอย่าง Slicer ใน Power BI" class="grid-image">
+            <p class="grid-caption">การใช้งาน Slicer</p>
+          </div>
         </div>
       </section>
 
@@ -729,6 +855,7 @@
   </button>
 
   <script>
+    /* --- JavaScript (Internal JavaScript) --- */
     // Smooth scroll for internal links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
